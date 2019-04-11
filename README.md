@@ -1,6 +1,6 @@
 # source-map-visualization
 
-http://sokra.github.com/source-map-visualization/
+http://jridgewell.github.com/source-map-visualization/
 
 ## Contribute
 
