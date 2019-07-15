@@ -148,14 +148,14 @@ module.exports = function(map, generatedCode, sources) {
 			originalLine++;
 		}
 		var exampleSource = sources[mapSources.indexOf(source)];
-		if(!exampleSource) throw new Error("Source '" + source + "' missing");
+		if(exampleSource === null) throw new Error("Source '" + source + "' missing");
 		exampleLines = exampleSource.split("\n");
 		currentSource = source;
 		mappings.forEach(function(mapping, idx) {
 			if(lastMapping) {
 				var source = mapSources.indexOf(lastMapping.source);
 				if(line < mapping.originalLine) {
-					addTo(originalSide, originalLine, span(exampleLines.shift(), {
+					addTo(originalSide, originalLine, span(exampleLines.shift() || '', {
 						original: true,
 						source: source,
 						line: lastMapping.originalLine,
@@ -165,7 +165,7 @@ module.exports = function(map, generatedCode, sources) {
 					line++; column = 0;
 					currentOutputLine++;
 					while(line < mapping.originalLine) {
-						addTo(originalSide, originalLine, sanitize(exampleLines.shift()));
+						addTo(originalSide, originalLine, sanitize(exampleLines.shift() || ''));
 						originalLine++;
 						line++; column = 0;
 						currentOutputLine++;
@@ -195,7 +195,7 @@ module.exports = function(map, generatedCode, sources) {
 				}
 			} else {
 				while(line < mapping.originalLine) {
-					addTo(originalSide, originalLine, sanitize(exampleLines.shift()));
+					addTo(originalSide, originalLine, sanitize(exampleLines.shift() || ''));
 					originalLine++;
 					line++; column = 0;
 				}
@@ -209,7 +209,7 @@ module.exports = function(map, generatedCode, sources) {
 	function endFile() {
 		if(lastMapping) {
 			var source = mapSources.indexOf(lastMapping.source);
-			addTo(originalSide, originalLine, span(exampleLines.shift(), {
+			addTo(originalSide, originalLine, span(exampleLines.shift() || '', {
 				original: true,
 				source: source,
 				line: lastMapping.originalLine,
@@ -227,7 +227,7 @@ module.exports = function(map, generatedCode, sources) {
 	endFile();
 
 	function shiftColumns(count) {
-        var nextLine = exampleLines[0];
+        var nextLine = exampleLines[0] || '';
 		exampleLines[0] = nextLine.substr(count);
 		column += count;
 		return nextLine.substr(0, count);
